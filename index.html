@@ -1,460 +1,1182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Finance Portfolio - Investment Banking, Consulting & Research Analyst">
-    <title>Ajiboye Daniel - Finance Portfolio</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio — Finance Analyst</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8C96D;
+      --gold-dim: rgba(201,168,76,0.15);
+      --bg: #0A0A0A;
+      --bg2: #111111;
+      --bg3: #161616;
+      --border: rgba(201,168,76,0.2);
+      --text: #E8E4DC;
+      --text-muted: #7A7570;
+      --text-dim: #4A4540;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* NOISE TEXTURE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 4rem;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: padding 0.3s;
+    }
+
+    .nav-logo {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 4rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+
+    .hero-ticker {
+      position: absolute;
+      top: 120px;
+      right: 4rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-align: right;
+      line-height: 2;
+    }
+
+    .ticker-item { display: flex; justify-content: flex-end; gap: 1.5rem; }
+    .ticker-up { color: #4CAF82; }
+    .ticker-down { color: #E05C5C; }
+
+    .hero-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.4s forwards;
+    }
+
+    .hero-name em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-desc {
+      max-width: 520px;
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.6s forwards;
+    }
+
+    .hero-creds {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.7s forwards;
+    }
+
+    .cred-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--gold-dim);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--gold-light);
+      text-transform: uppercase;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.9s forwards;
+    }
+
+    .btn-primary {
+      padding: 0.85rem 2rem;
+      background: var(--gold);
+      color: #0A0A0A;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    .btn-outline {
+      padding: 0.85rem 2rem;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, transform 0.2s;
+    }
+
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      right: 4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeIn 1s 1.5s forwards;
+    }
+
+    .scroll-line {
+      width: 40px;
+      height: 1px;
+      background: var(--text-dim);
+      animation: lineGrow 1.5s 1.5s ease forwards;
+      transform-origin: left;
+      transform: scaleX(0);
+    }
+
+    /* SECTIONS GENERAL */
+    section {
+      padding: 7rem 4rem;
+      position: relative;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--gold);
+      letter-spacing: 0.2em;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    /* ABOUT */
+    #about { background: var(--bg2); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .about-bio p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .about-bio p strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .stat-box {
+      background: var(--bg2);
+      padding: 1.75rem;
+    }
+
+    .stat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* SKILLS */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+
+    .skill-category {
+      background: var(--bg2);
+      padding: 1.75rem;
+    }
+
+    .skill-cat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .skill-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .skill-list li {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      padding-left: 0.75rem;
+      position: relative;
+    }
+
+    .skill-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--text-dim);
+      font-size: 0.7rem;
+    }
+
+    /* PORTFOLIO CARDS */
+    #work { background: var(--bg); }
+
+    .work-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: -1px;
+    }
+
+    .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+    .tab-btn:hover:not(.active) { color: var(--text); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* STOCK PITCH CARDS */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .pitch-card {
+      background: var(--bg3);
+      padding: 2rem;
+      transition: background 0.2s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pitch-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gold);
+      transition: width 0.3s ease;
+    }
+
+    .pitch-card:hover { background: var(--bg2); }
+    .pitch-card:hover::after { width: 100%; }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .card-ticker {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .card-rating {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      padding: 0.25rem 0.6rem;
+    }
+
+    .rating-buy { background: rgba(76,175,130,0.15); color: #4CAF82; border: 1px solid rgba(76,175,130,0.3); }
+    .rating-hold { background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid var(--border); }
+    .rating-sell { background: rgba(224,92,92,0.15); color: #E05C5C; border: 1px solid rgba(224,92,92,0.3); }
+
+    .card-company {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-sector {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .card-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .metric-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--text);
+    }
+
+    .metric-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    /* INDUSTRY REPORT */
+    .report-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .report-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--gold);
+    }
+
+    .report-meta {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .report-meta-item {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .report-meta-item span {
+      display: block;
+      color: var(--gold);
+      font-size: 0.7rem;
+      margin-top: 0.2rem;
+    }
+
+    .report-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .report-summary {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 700px;
+      margin-bottom: 2rem;
+      line-height: 1.8;
+    }
+
+    .report-highlights {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .highlight-box {
+      background: var(--bg3);
+      padding: 1.25rem;
+    }
+
+    .highlight-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--gold);
+      margin-bottom: 0.25rem;
+    }
+
+    .highlight-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* FINANCIAL MODEL */
+    .model-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .model-info {
+      background: var(--bg3);
+      padding: 2.5rem;
+    }
+
+    .model-badge {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      border: 1px solid var(--border);
+      padding: 0.2rem 0.6rem;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+
+    .model-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .model-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.75rem;
+    }
+
+    .model-components {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .model-components li {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .comp-dot {
+      width: 5px; height: 5px;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .model-visual {
+      background: var(--bg);
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .mini-chart {
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 80px;
+    }
+
+    .bar {
+      flex: 1;
+      background: var(--gold-dim);
+      border-top: 2px solid var(--gold);
+      transition: height 0.3s;
+      border-radius: 1px 1px 0 0;
+    }
+
+    .chart-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* PLACEHOLDER CARD (in-progress) */
+    .placeholder-card {
+      background: var(--bg3);
+      border: 1px dashed var(--text-dim);
+      padding: 3rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 0.75rem;
+    }
+
+    .placeholder-icon {
+      font-size: 1.5rem;
+      opacity: 0.3;
+    }
+
+    .placeholder-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    /* CONTACT */
+    #contact {
+      background: var(--bg2);
+      text-align: center;
+    }
+
+    .contact-inner {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .contact-tagline {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .contact-tagline em { color: var(--gold); font-style: italic; }
+
+    .contact-sub {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .contact-link:hover { color: var(--gold); }
+
+    .contact-divider {
+      color: var(--text-dim);
+      font-size: 0.7rem;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 1.5rem 4rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-left {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .footer-right {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--text-dim);
+    }
+
+    .footer-right a { color: var(--gold); text-decoration: none; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes lineGrow {
+      to { transform: scaleX(1); }
+    }
+
+    /* SCROLL REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      nav { padding: 1.25rem 1.5rem; }
+      .nav-links { display: none; }
+      #hero { padding: 0 1.5rem 4rem; }
+      .hero-ticker { display: none; }
+      section { padding: 5rem 1.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .report-highlights { grid-template-columns: repeat(2, 1fr); }
+      .model-card { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 0.5rem; padding: 1.5rem; }
+      .about-stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-brand">
-                <a href="#home">Ajiboye Daniel</a>
-            </div>
-            <ul class="nav-menu" id="nav-menu">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Daniel Ajiboye</div>
+    <ul class="nav-links">
+      <li><a href="#about">Profile</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-grid-bg"></div>
+
+    <div class="hero-ticker">
+      <div class="ticker-item"><span>DANGCEM</span><span class="ticker-up">↑ 2.4%</span></div>
+      <div class="ticker-item"><span>UBA</span><span class="ticker-up">↑ 1.8%</span></div>
+      <div class="ticker-item"><span>MTNN</span><span class="ticker-down">↓ 0.6%</span></div>
+      <div class="ticker-item"><span>SEPLAT</span><span class="ticker-up">↑ 3.1%</span></div>
+      <div class="ticker-item"><span>AIRTELAFRI</span><span class="ticker-up">↑ 1.2%</span></div>
+    </div>
+
+    <p class="hero-label">Finance &amp; Investments — Lagos, Nigeria</p>
+
+    <h1 class="hero-name">
+      Daniel<br/><em>Ajiboye</em>
+    </h1>
+
+    <p class="hero-desc">
+      Investment banking and equity research analyst with a passion for African capital markets, financial modeling, and data-driven investment decisions.
+    </p>
+
+    <div class="hero-creds">
+      <div class="cred-pill">★ ACA — ICAN Certified</div>
+      <div class="cred-pill">★ CGPA 4.77 / 5.0</div>
+      <div class="cred-pill">★ CFA Candidate</div>
+      <div class="cred-pill">★ B.Sc. Business Administration</div>
+    </div>
+
+    <div class="hero-actions">
+      <a href="#work" class="btn-primary">View Portfolio</a>
+      <a href="#contact" class="btn-outline">Get In Touch</a>
+    </div>
+
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      Scroll to explore
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-header reveal">
+      <span class="section-num">01 —</span>
+      <h2 class="section-title">Profile</h2>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-bio reveal">
+        <p>
+          Final-year <strong>Business Administration student</strong> at Landmark University, Kwara State, with a CGPA of <strong>4.77/5.0</strong>. Holds dual professional qualifications — <strong>ACA (ICAN)</strong> and <strong>ATSWA</strong> — and is currently preparing for the CFA Level I examination.
+        </p>
+        <p>
+          Practical experience as a <strong>Statistical Analyst at MyAdmissionLink Educational Consult</strong>, where I built financial dashboards, conducted variance analysis, and supported investment and budgeting decisions using statistical models.
+        </p>
+        <p>
+          This portfolio demonstrates my ability to build complete financial models from scratch, write institutional-quality investment theses, and synthesize complex industry dynamics into actionable insights — focused on <strong>Nigerian and pan-African equity markets</strong>.
+        </p>
+
+        <div class="skills-grid">
+          <div class="skill-category">
+            <p class="skill-cat-label">Valuation</p>
+            <ul class="skill-list">
+              <li>DCF Analysis</li>
+              <li>Comparable Company Analysis</li>
+              <li>LBO Modeling</li>
+              <li>M&amp;A Modeling</li>
             </ul>
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+          </div>
+          <div class="skill-category">
+            <p class="skill-cat-label">Tools</p>
+            <ul class="skill-list">
+              <li>Excel / VBA</li>
+              <li>Bloomberg Terminal</li>
+              <li>Python (pandas)</li>
+              <li>Power BI</li>
+            </ul>
+          </div>
+          <div class="skill-category">
+            <p class="skill-cat-label">Finance</p>
+            <ul class="skill-list">
+              <li>Financial Modeling</li>
+              <li>Equity Research</li>
+              <li>Credit Analysis</li>
+              <li>Pitchbook Creation</li>
+            </ul>
+          </div>
         </div>
-    </nav>
+      </div>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">Finance Portfolio</h1>
-                <h2 class="hero-subtitle">Investment Banking | Consulting | Research Analyst</h2>
-                <p class="hero-description">
-                    Business Administration Student | ICAN Certified Accountant | 
-                </p>
-                <p class="hero-text">
-                    Demonstrating expertise in equity research, financial modeling, and industry analysis 
-                    through comprehensive stock pitches, sector deep dives, and complete 3-statement models.
-                </p>
-                <div class="hero-buttons">
-                    <a href="#portfolio" class="btn btn-primary">View Portfolio</a>
-                    <a href="#contact" class="btn btn-secondary">Get in Touch</a>
-                </div>
-            </div>
+      <div class="about-stats reveal">
+        <div class="stat-box">
+          <div class="stat-val">4.77</div>
+          <div class="stat-label">CGPA out of 5.0</div>
         </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <h2 class="section-title">About Me</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <p class="about-intro">
-                        I'm a final-year Business Administration student with a passion for financial analysis 
-                        and investment research. With a 4.77 CGPA and ICAN certification, I've built a strong 
-                        foundation in accounting and finance principles.
-                    </p>
-                    <p>
-                        To validate my interest in investment banking, consulting, and research analyst roles, 
-                        I've developed this comprehensive portfolio showcasing real-world analytical capabilities. 
-                        Each project demonstrates my ability to analyze financial statements, build valuation models, 
-                        understand industry dynamics, and communicate investment insights.
-                    </p>
-                    
-                    <div class="credentials">
-                        <h3>Credentials & Skills</h3>
-                        <div class="credentials-grid">
-                            <div class="credential-item">
-                                <h4>📚 Education</h4>
-                                <p>Business Administration (400 Level)</p>
-                                <p>CGPA: 4.77/5.0</p>
-                            </div>
-                            <div class="credential-item">
-                                <h4>📜 Certification</h4>
-                                <p>ICAN Certified Accountant</p>
-                                <p>Chartered Accountant, Nigeria</p>
-                            </div>
-                            <div class="credential-item">
-                                <h4>📊 Technical Skills</h4>
-                                <p>Financial Modeling, DCF Valuation</p>
-                                <p>Excel (Advanced), Financial Analysis</p>
-                            </div>
-                            <div class="credential-item">
-                                <h4>🎯 Target Roles</h4>
-                                <p>Investment Banking Analyst</p>
-                                <p>Consulting, Research Analyst</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="stat-box">
+          <div class="stat-val">ACA</div>
+          <div class="stat-label">ICAN Chartered Accountant</div>
         </div>
-    </section>
-
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="portfolio">
-        <div class="container">
-            <h2 class="section-title">Portfolio</h2>
-            <p class="section-subtitle">
-                Demonstrating analytical capabilities through comprehensive financial analysis, 
-                valuation modeling, and industry research.
-            </p>
-
-            <!-- Stock Pitches -->
-            <div class="portfolio-category">
-                <h3 class="category-title">Stock Pitches: Nigerian Equity Analysis</h3>
-                <p class="category-description">
-                    Investment recommendations backed by fundamental analysis, DCF valuation, and 
-                    comparable company analysis. Each pitch includes detailed financial modeling, 
-                    risk assessment, and investment thesis.
-                </p>
-                
-                <div class="portfolio-grid">
-                    <!-- Stock Pitch 1 -->
-                    <div class="portfolio-card">
-                        <div class="card-header">
-                            <h4>United Bank for Africa (UBA)</h4>
-                            <span class="recommendation buy">BUY</span>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-metric">
-                                <strong>Target Price:</strong> ₦25.50 <span class="upside">(+30% upside)</span>
-                            </p>
-                            <p class="card-description">
-                                UBA is undervalued relative to peers despite strong loan growth, improving 
-                                asset quality, and pan-African expansion. DCF suggests intrinsic value of ₦26.
-                            </p>
-                            <div class="card-highlights">
-                                <p><strong>Key Catalysts:</strong></p>
-                                <ul>
-                                    <li>CBN rate hikes expanding net interest margin</li>
-                                    <li>Kenya/Ghana subsidiaries turning profitable</li>
-                                    <li>Digital banking reducing cost-to-income ratio</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <a href="#" class="download-link">📄 Download Pitch (PDF)</a>
-                            <a href="#" class="download-link">📊 Excel Model</a>
-                        </div>
-                    </div>
-
-                    <!-- Stock Pitch 2 -->
-                    <div class="portfolio-card">
-                        <div class="card-header">
-                            <h4>Dangote Cement Plc</h4>
-                            <span class="recommendation hold">HOLD</span>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-metric">
-                                <strong>Target Price:</strong> ₦285 <span class="neutral">(Fair Value)</span>
-                            </p>
-                            <p class="card-description">
-                                Market leader trading at fair value. Strong competitive moat and cash generation, 
-                                but limited near-term catalysts. Wait for better entry point.
-                            </p>
-                            <div class="card-highlights">
-                                <p><strong>Key Considerations:</strong></p>
-                                <ul>
-                                    <li>70% market share provides pricing power</li>
-                                    <li>Forex headwinds from import-dependent inputs</li>
-                                    <li>Pan-African expansion creating long-term value</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <a href="#" class="download-link">📄 Download Pitch (PDF)</a>
-                            <a href="#" class="download-link">📊 Excel Model</a>
-                        </div>
-                    </div>
-
-                    <!-- Stock Pitch 3 -->
-                    <div class="portfolio-card">
-                        <div class="card-header">
-                            <h4>MTN Nigeria Communications</h4>
-                            <span class="recommendation buy">BUY</span>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-metric">
-                                <strong>Target Price:</strong> ₦240 <span class="upside">(+25% upside)</span>
-                            </p>
-                            <p class="card-description">
-                                Market leader with strong data growth and mobile money expansion potential. 
-                                5G rollout and fintech opportunities underappreciated by market.
-                            </p>
-                            <div class="card-highlights">
-                                <p><strong>Key Catalysts:</strong></p>
-                                <ul>
-                                    <li>Data revenue growing 35% YoY as smartphone adoption accelerates</li>
-                                    <li>MoMo (mobile money) reaching profitability in 2025</li>
-                                    <li>5G infrastructure creating competitive advantage</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <a href="#" class="download-link">📄 Download Pitch (PDF)</a>
-                            <a href="#" class="download-link">📊 Excel Model</a>
-                        </div>
-                    </div>
-
-                    <!-- Stock Pitch 4 -->
-                    <div class="portfolio-card">
-                        <div class="card-header">
-                            <h4>Seplat Energy Plc</h4>
-                            <span class="recommendation sell">SELL</span>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-metric">
-                                <strong>Target Price:</strong> ₦1,850 <span class="downside">(-15% downside)</span>
-                            </p>
-                            <p class="card-description">
-                                Overvalued given production challenges, regulatory uncertainty, and capex requirements. 
-                                Oil price volatility adds significant risk to near-term earnings.
-                            </p>
-                            <div class="card-highlights">
-                                <p><strong>Key Risks:</strong></p>
-                                <ul>
-                                    <li>Crude oil theft impacting production volumes</li>
-                                    <li>Regulatory delays on PIA implementation</li>
-                                    <li>High capex needs limiting free cash flow</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <a href="#" class="download-link">📄 Download Pitch (PDF)</a>
-                            <a href="#" class="download-link">📊 Excel Model</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Industry Report -->
-            <div class="portfolio-category">
-                <h3 class="category-title">Industry Deep Dive: Nigerian Fintech Sector</h3>
-                <p class="category-description">
-                    Comprehensive analysis of the Nigerian fintech market, examining competitive dynamics, 
-                    growth drivers, regulatory landscape, and investment opportunities.
-                </p>
-                
-                <div class="industry-report-card">
-                    <div class="report-header">
-                        <h4>The Nigerian Fintech Revolution: Investment Opportunities in Digital Payments & Lending</h4>
-                    </div>
-                    <div class="report-body">
-                        <div class="report-stats">
-                            <div class="stat-item">
-                                <h5>Market Size (2024)</h5>
-                                <p class="stat-value">$1.5B</p>
-                                <p class="stat-growth">50% CAGR (2019-2024)</p>
-                            </div>
-                            <div class="stat-item">
-                                <h5>Penetration Growth</h5>
-                                <p class="stat-value">15% → 45%</p>
-                                <p class="stat-growth">5-Year Digital Payments</p>
-                            </div>
-                            <div class="stat-item">
-                                <h5>Report Length</h5>
-                                <p class="stat-value">15 Pages</p>
-                                <p class="stat-growth">7 Visualizations</p>
-                            </div>
-                        </div>
-                        
-                        <div class="report-highlights">
-                            <h5>Key Findings:</h5>
-                            <ul>
-                                <li><strong>Payments Segment:</strong> Flutterwave (unicorn, IPO-ready), Paystack (Stripe acquisition benchmark) dominate. Strong network effects creating winner-take-most dynamic.</li>
-                                <li><strong>Lending Opportunity:</strong> Carbon, FairMoney addressing $15B MSME credit gap. Digital underwriting reducing default rates from 8% to 3%.</li>
-                                <li><strong>Regulatory Tailwinds:</strong> CBN Payment Service Bank licenses and Open Banking framework accelerating innovation and competition.</li>
-                                <li><strong>Infrastructure Play:</strong> Interswitch switching/settlement services critical as digital transactions scale 10x by 2027.</li>
-                            </ul>
-                        </div>
-
-                        <div class="report-sections">
-                            <h5>Report Contents:</h5>
-                            <div class="sections-grid">
-                                <div class="section-item">
-                                    <strong>Executive Summary</strong>
-                                    <p>Market overview, key findings, investment implications</p>
-                                </div>
-                                <div class="section-item">
-                                    <strong>Competitive Landscape</strong>
-                                    <p>Porter's Five Forces, market share, competitive dynamics</p>
-                                </div>
-                                <div class="section-item">
-                                    <strong>Growth Drivers</strong>
-                                    <p>Technology adoption, demographics, policy, economics</p>
-                                </div>
-                                <div class="section-item">
-                                    <strong>Investment Opportunities</strong>
-                                    <p>Subsector analysis, companies to watch, M&A potential</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="report-footer">
-                        <a href="#" class="download-link large">📄 Download Full Report (PDF)</a>
-                        <a href="#" class="download-link large">📊 Supporting Data & Charts (Excel)</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Financial Models -->
-            <div class="portfolio-category">
-                <h3 class="category-title">3-Statement Financial Models</h3>
-                <p class="category-description">
-                    Complete integrated financial models linking Income Statement, Balance Sheet, and Cash Flow Statement. 
-                    Includes historical analysis, 5-year projections, DCF valuation, and sensitivity analysis.
-                </p>
-                
-                <div class="models-grid">
-                    <div class="model-card">
-                        <div class="model-header">
-                            <h4>Dangote Cement Plc</h4>
-                            <span class="model-badge">Manufacturing / Consumer Goods</span>
-                        </div>
-                        <div class="model-body">
-                            <p class="model-description">
-                                Complete 3-statement model with 5 years historical and 10 years projected financials. 
-                                Includes working capital schedule, debt waterfall, and DCF valuation.
-                            </p>
-                            <div class="model-features">
-                                <h5>Model Features:</h5>
-                                <ul>
-                                    <li>✓ Fully integrated Income Statement, Balance Sheet, Cash Flow</li>
-                                    <li>✓ Dynamic assumptions dashboard with sensitivity controls</li>
-                                    <li>✓ DCF valuation with WACC calculation and terminal value</li>
-                                    <li>✓ Scenario analysis (Base / Bull / Bear cases)</li>
-                                    <li>✓ Professional formatting with color-coded inputs/formulas</li>
-                                </ul>
-                            </div>
-                            <div class="model-metrics">
-                                <p><strong>Valuation Output:</strong> ₦285 per share</p>
-                                <p><strong>Model Complexity:</strong> 8 linked sheets, 2,500+ formulas</p>
-                            </div>
-                        </div>
-                        <div class="model-footer">
-                            <a href="#" class="download-link">📊 Download Model (Excel)</a>
-                        </div>
-                    </div>
-
-                    <div class="model-card">
-                        <div class="model-header">
-                            <h4>United Bank for Africa (UBA)</h4>
-                            <span class="model-badge">Financial Services / Banking</span>
-                        </div>
-                        <div class="model-body">
-                            <p class="model-description">
-                                Bank-specific 3-statement model incorporating loan portfolio dynamics, net interest margin analysis, 
-                                and Basel III capital requirements. More complex than standard corporate models.
-                            </p>
-                            <div class="model-features">
-                                <h5>Model Features:</h5>
-                                <ul>
-                                    <li>✓ Interest income/expense modeling by loan/deposit category</li>
-                                    <li>✓ Provision for loan losses with historical default analysis</li>
-                                    <li>✓ Capital adequacy ratio (CAR) tracking vs. regulatory minimums</li>
-                                    <li>✓ ROE decomposition (DuPont analysis)</li>
-                                    <li>✓ Comparable bank multiples and relative valuation</li>
-                                </ul>
-                            </div>
-                            <div class="model-metrics">
-                                <p><strong>Valuation Output:</strong> ₦26 per share</p>
-                                <p><strong>Model Complexity:</strong> 10 linked sheets, 3,200+ formulas</p>
-                            </div>
-                        </div>
-                        <div class="model-footer">
-                            <a href="#" class="download-link">📊 Download Model (Excel)</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Portfolio Summary -->
-            <div class="portfolio-summary">
-                <h3>Portfolio Summary</h3>
-                <p>
-                    This portfolio represents over 200 hours of analytical work demonstrating capabilities in:
-                </p>
-                <div class="summary-skills">
-                    <span class="skill-tag">Financial Statement Analysis</span>
-                    <span class="skill-tag">DCF Valuation</span>
-                    <span class="skill-tag">Comparable Company Analysis</span>
-                    <span class="skill-tag">Industry Research</span>
-                    <span class="skill-tag">Excel Modeling</span>
-                    <span class="skill-tag">Investment Writing</span>
-                    <span class="skill-tag">Data Visualization</span>
-                    <span class="skill-tag">Strategic Analysis</span>
-                </div>
-                <div class="summary-cta">
-                    <a href="#contact" class="btn btn-primary">Discuss These Analyses</a>
-                    <a href="#" class="btn btn-secondary" download>Download Full Portfolio (ZIP)</a>
-                </div>
-            </div>
+        <div class="stat-box">
+          <div class="stat-val">3+</div>
+          <div class="stat-label">Stock Pitches</div>
         </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2 class="section-title">Get in Touch</h2>
-            <p class="section-subtitle">
-                I'm actively seeking analyst opportunities in investment banking, consulting, and research roles. 
-                Let's discuss how I can contribute to your team.
-            </p>
-            
-            <div class="contact-content">
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <h4>📧 Email</h4>
-                        <p><a href="/cdn-cgi/l/email-protection#027b6d77702c676f636b6e42677a636f726e672c616d6f"><span class="__cf_email__" data-cfemail="add4c2d8df83c8c0ccc4c1edc8d5ccc0ddc1c883cec2c0">[email&#160;protected]</span></a></p>
-                    </div>
-                    <div class="contact-item">
-                        <h4>💼 LinkedIn</h4>
-                        <p><a href="https://linkedin.com/in/yourprofile" target="_blank">linkedin.com/in/yourprofile</a></p>
-                    </div>
-                    <div class="contact-item">
-                        <h4>📍 Location</h4>
-                        <p>Lagos, Nigeria</p>
-                    </div>
-                    <div class="contact-item">
-                        <h4>📄 Resume</h4>
-                        <p><a href="#" download>Download Resume (PDF)</a></p>
-                    </div>
-                </div>
-
-                <div class="contact-cta">
-                    <h3>Available For:</h3>
-                    <ul>
-                        <li>Investment Banking Analyst positions</li>
-                        <li>Management Consulting roles</li>
-                        <li>Equity Research Analyst opportunities</li>
-                        <li>Informational interviews</li>
-                        <li>Portfolio discussions and feedback</li>
-                    </ul>
-                    <p class="contact-note">
-                        <strong>Note:</strong> This portfolio is continuously updated as I complete new analyses. 
-                        Check back regularly for additional stock pitches and industry reports.
-                    </p>
-                </div>
-            </div>
+        <div class="stat-box">
+          <div class="stat-val">CFA</div>
+          <div class="stat-label">Level I Candidate</div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2026 Ajiboye Daniel. All rights reserved. | Built to demonstrate analytical capabilities for finance roles.</p>
-            <div class="footer-links">
-                <a href="#home">Home</a>
-                <a href="#about">About</a>
-                <a href="#portfolio">Portfolio</a>
-         
+  <!-- WORK -->
+  <section id="work">
+    <div class="section-header reveal">
+      <span class="section-num">02 —</span>
+      <h2 class="section-title">Portfolio Work</h2>
+    </div>
+
+    <div class="work-tabs reveal">
+      <button class="tab-btn active" onclick="switchTab('pitches')">Stock Pitches</button>
+      <button class="tab-btn" onclick="switchTab('reports')">Industry Reports</button>
+      <button class="tab-btn" onclick="switchTab('models')">Financial Models</button>
+    </div>
+
+    <!-- STOCK PITCHES TAB -->
+    <div id="tab-pitches" class="tab-content active">
+      <div class="cards-grid">
+
+        <div class="pitch-card">
+          <div class="card-header">
+            <span class="card-ticker">NGX: DANGCEM</span>
+            <span class="card-rating rating-buy">BUY</span>
+          </div>
+          <h3 class="card-company">Dangote Cement</h3>
+          <p class="card-sector">Materials / Construction — Nigeria &amp; Pan-Africa</p>
+          <div class="card-metrics">
+            <div>
+              <div class="metric-val">₦542</div>
+              <div class="metric-label">Target Price</div>
+            </div>
+            <div>
+              <div class="metric-val">+28%</div>
+              <div class="metric-label">Upside</div>
+            </div>
+            <div>
+              <div class="metric-val">6.2x</div>
+              <div class="metric-label">EV/EBITDA</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pitch-card">
+          <div class="card-header">
+            <span class="card-ticker">NGX: UBA</span>
+            <span class="card-rating rating-buy">BUY</span>
+          </div>
+          <h3 class="card-company">United Bank for Africa</h3>
+          <p class="card-sector">Financial Services — 20 African Countries</p>
+          <div class="card-metrics">
+            <div>
+              <div class="metric-val">₦25.50</div>
+              <div class="metric-label">Target Price</div>
+            </div>
+            <div>
+              <div class="metric-val">+30%</div>
+              <div class="metric-label">Upside</div>
+            </div>
+            <div>
+              <div class="metric-val">1.1x</div>
+              <div class="metric-label">P/BV</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pitch-card">
+          <div class="card-header">
+            <span class="card-ticker">NGX: MTNN</span>
+            <span class="card-rating rating-hold">HOLD</span>
+          </div>
+          <h3 class="card-company">MTN Nigeria</h3>
+          <p class="card-sector">Telecommunications — 80M+ Subscribers</p>
+          <div class="card-metrics">
+            <div>
+              <div class="metric-val">₦198</div>
+              <div class="metric-label">Target Price</div>
+            </div>
+            <div>
+              <div class="metric-val">+8%</div>
+              <div class="metric-label">Upside</div>
+            </div>
+            <div>
+              <div class="metric-val">4.8x</div>
+              <div class="metric-label">EV/EBITDA</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="placeholder-card">
+          <div class="placeholder-icon">◎</div>
+          <p class="placeholder-label">4th Pitch — In Progress</p>
+          <p style="font-size:0.78rem; color: var(--text-dim)">Seplat Energy / Airtel Africa</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- INDUSTRY REPORTS TAB -->
+    <div id="tab-reports" class="tab-content">
+      <div class="report-card reveal">
+        <div class="report-meta">
+          <div class="report-meta-item">
+            Sector <span>Fintech / Digital Finance</span>
+          </div>
+          <div class="report-meta-item">
+            Geography <span>Nigeria</span>
+          </div>
+          <div class="report-meta-item">
+            Pages <span>12 Pages</span>
+          </div>
+          <div class="report-meta-item">
+            Published <span>2025</span>
+          </div>
+        </div>
+
+        <h3 class="report-title">Nigerian Fintech Sector — Deep Dive Report</h3>
+        <p class="report-summary">
+          A comprehensive analysis of Nigeria's high-growth fintech ecosystem, covering regulatory dynamics, competitive landscape, and investment opportunities across digital payments, embedded finance, and B2B infrastructure plays.
+        </p>
+
+        <div class="report-highlights">
+          <div class="highlight-box">
+            <div class="highlight-num">$1.5B</div>
+            <div class="highlight-desc">Market size by 2024, up from $200M in 2019</div>
+          </div>
+          <div class="highlight-box">
+            <div class="highlight-num">50%</div>
+            <div class="highlight-desc">5-year CAGR in digital payments penetration</div>
+          </div>
+          <div class="highlight-box">
+            <div class="highlight-num">45%</div>
+            <div class="highlight-desc">Digital payment penetration vs 15% in 2019</div>
+          </div>
+          <div class="highlight-box">
+            <div class="highlight-num">3</div>
+            <div class="highlight-desc">Identified high-conviction investment opportunities</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINANCIAL MODELS TAB -->
+    <div id="tab-models" class="tab-content">
+      <div class="model-card reveal">
+        <div class="model-info">
+          <span class="model-badge">3-Statement Model + DCF</span>
+          <h3 class="model-title">Dangote Cement — Full Financial Model</h3>
+          <p class="model-desc">
+            Integrated 3-statement model with 5-year historical data, 10-year projections, scenario analysis, and a DCF valuation with WACC sensitivity table. Built from scratch using NGX annual reports.
+          </p>
+          <ul class="model-components">
+            <li><span class="comp-dot"></span>Income Statement (2019–2034E)</li>
+            <li><span class="comp-dot"></span>Balance Sheet — fully balances</li>
+            <li><span class="comp-dot"></span>Cash Flow Statement (direct method)</li>
+            <li><span class="comp-dot"></span>DCF with WACC sensitivity</li>
+            <li><span class="comp-dot"></span>Comparable company analysis (comps)</li>
+            <li><span class="comp-dot"></span>Revenue segment breakdown</li>
+          </ul>
+        </div>
+        <div class="model-visual">
+          <div class="mini-chart" id="miniChart"></div>
+          <p class="chart-label">Revenue Projection (₦bn)</p>
+        </div>
+      </div>
+
+      <div style="margin-top:1px; background: var(--border);">
+        <div class="placeholder-card" style="border:none;">
+          <div class="placeholder-icon">◎</div>
+          <p class="placeholder-label">Bank Model — In Progress</p>
+          <p style="font-size:0.78rem; color: var(--text-dim)">UBA / GTBank 3-Statement Model</p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-inner">
+      <h2 class="contact-tagline reveal">
+        Let's talk about<br/><em>opportunities.</em>
+      </h2>
+      <p class="contact-sub reveal">
+        Open to analyst roles in investment banking, equity research, and management consulting. Based in Lagos — available immediately post-graduation.
+      </p>
+
+      <div class="contact-links reveal">
+        <a href="mailto:ajiboyedaniel2020@gmail.com" class="contact-link">
+          ✉ ajiboyedaniel2020@gmail.com
+        </a>
+        <span class="contact-divider">·</span>
+        <a href="https://linkedin.com/in/daniel-ajiboye" target="_blank" class="contact-link">
+          in LinkedIn
+        </a>
+        <span class="contact-divider">·</span>
+        <a href="cv.pdf" target="_blank" class="contact-link">
+          ↓ Download CV
+        </a>
+      </div>
+
+      <a href="mailto:ajiboyedaniel2020@gmail.com" class="btn-primary reveal">Reach Out</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-left">© 2025 Daniel Ajiboye · Lagos, Nigeria</span>
+    <span class="footer-right">Built for finance recruitment · <a href="#">GitHub Pages</a></span>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // Tab switching
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Mini bar chart
+    const bars = [320, 380, 410, 445, 490, 530, 580, 620, 670, 720];
+    const maxBar = Math.max(...bars);
+    const chart = document.getElementById('miniChart');
+    if (chart) {
+      bars.forEach((val, i) => {
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        const pct = (val / maxBar) * 100;
+        bar.style.height = pct + '%';
+        bar.title = `₦${val}bn`;
+        chart.appendChild(bar);
+      });
+    }
+
+    // Nav shrink on scroll
+ 
